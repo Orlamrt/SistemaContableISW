@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditorías</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="Styles/stylesLR.css">
+</head>
+<body>
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="logo">
+            <span>Jul 7 - Aug 21, 2025</span>
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i></a></li>
+                <li><a href="auditorias.html" class="nav-item active"><i class="fas fa-search"></i></a></li>
+                <li><a href="notificaciones.html" class="nav-item"><i class="fas fa-bell"></i></a></li>
+                <li><a href="coordinacion.html" class="nav-item"><i class="fas fa-user-friends"></i></a></li>
+                <li><a href="cumplimiento.html" class="nav-item"><i class="fas fa-plus"></i></a></li>
+            </ul>
+        </nav>
+        <div class="logout-btn">
+            <a href="#" class="logout-link"><i class="fas fa-sign-out-alt"></i></a>
+        </div>
+    </aside>
+
+    <main class="content-area">
+        <h1 class="page-title">Auditorías</h1>
+        <div class="new-audit-card">
+            <h2>NUEVA SOLICITUD DE AUDITORÍA</h2>
+            <p>Llene cada uno de campos solicitados</p>
+            <form id="new-request-form">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="audit-type">TIPO</label>
+                        <select id="audit-type" required>
+                            <option value="" disabled selected>Seleccione el tipo de auditoría</option>
+                            <option value="interna">Interna</option>
+                            <option value="externa">Externa</option>
+                            <option value="ti">TI</option>
+                        </select>
+                    </div>
+                    <div class="input-group file-upload">
+                        <label>Archivo</label>
+                        <input type="text" placeholder="Subir archivo" readonly>
+                        <input type="file" id="upload-file" accept=".pdf,.csv" required hidden>
+                        <label for="upload-file" class="file-icon-btn"><i class="fas fa-paperclip"></i></label>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-enviar">Enviar</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+<script src="js/app.js"></script>
+</body>
+</html>

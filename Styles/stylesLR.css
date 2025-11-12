@@ -1,0 +1,579 @@
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #f39c12;
+    --background-color: #f8f8f8;
+    --card-background: #ffffff;
+    --input-border: #bdc3c7;
+    --sidebar-color: #1e272e;
+    --sidebar-icon-hover: #4a545a;
+    --active-icon-bg: #f39c12;
+    --progress-completed: #2c3e50;
+    --progress-current: #a3a7a9;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+    background-color: var(--background-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* ====== 1. PÁGINAS DE AUTENTICACIÓN ====== */
+
+.auth-page {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.login-wrapper,
+.register-wrapper,
+.recover-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background-color: var(--card-background);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    min-height: 500px;
+}
+
+.login-illustration,
+.register-illustration,
+.recover-illustration {
+    background-color: #efece5;
+    background-size: cover;
+    background-position: center;
+}
+
+.login-form-card,
+.register-form-card,
+.recover-form-card {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auth-title {
+    color: var(--primary-color);
+    font-size: 32px;
+    margin-bottom: 20px;
+    font-weight: 900;
+}
+
+.input-group { margin-bottom: 20px; }
+
+.input-group label {
+    display: block;
+    font-size: 10px;
+    font-weight: bold;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid var(--input-border);
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+}
+
+.btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.btn-login,
+.btn-enviar {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-register,
+.btn-restablecer {
+    background-color: #e0e0e0;
+    color: var(--primary-color);
+    border: 1px solid #ccc;
+}
+
+.auth-links {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.auth-links a {
+    color: var(--primary-color);
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+/* ====== 2. LAYOUT APLICACIÓN INTERNA ====== */
+
+.app-layout {
+    width: 100%;
+    max-width: 1400px;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    background-color: var(--background-color);
+}
+
+/* Sidebar */
+
+.sidebar {
+    background-color: var(--sidebar-color);
+    color: white;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo span {
+    display: block;
+    text-align: center;
+    font-size: 10px;
+    margin-bottom: 30px;
+    color: #95a5a6;
+}
+
+.main-nav ul {
+    list-style: none;
+}
+
+.nav-item {
+    display: block;
+    padding: 15px;
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    margin: 10px 0;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.nav-item:hover {
+    background-color: var(--sidebar-icon-hover);
+}
+
+.nav-item.active {
+    background-color: var(--active-icon-bg);
+    color: var(--primary-color);
+}
+
+.logout-btn a {
+    color: #95a5a6;
+    font-size: 20px;
+    padding: 15px;
+}
+
+/* Contenido principal */
+
+.content-area {
+    padding: 30px;
+    overflow-y: auto;
+    background-color: var(--background-color);
+}
+
+.page-title {
+    color: var(--primary-color);
+    font-size: 30px;
+    margin-bottom: 30px;
+    font-weight: 800;
+}
+
+/* Dashboard */
+
+.dashboard-grid-small,
+.dashboard-grid-large {
+    display: grid;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.dashboard-grid-small {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.dashboard-grid-large {
+    grid-template-columns: 1fr 1fr;
+}
+
+.panel-card {
+    background: var(--card-background);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.card-title {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+.audit-summary > div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.progress-bar {
+    flex-grow: 1;
+    height: 8px;
+    background: #ecf0f1;
+    border-radius: 4px;
+    margin-left: 10px;
+    overflow: hidden;
+}
+
+.progress-bar span {
+    display: block;
+    height: 100%;
+    background: var(--progress-completed);
+    border-radius: 4px;
+}
+
+.btn-more {
+    background: none;
+    border: none;
+    color: var(--secondary-color);
+    cursor: pointer;
+    text-decoration: underline;
+    margin-top: 10px;
+    font-size: 12px;
+}
+
+/* KPIs */
+
+.kpis-section h2 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.kpis-grid {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.kpi-item {
+    min-width: 180px;
+    background: var(--card-background);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.kpi-item i {
+    font-size: 24px;
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+}
+
+.kpi-item p {
+    font-weight: bold;
+    color: #e74c3c;
+}
+
+/* Auditorías */
+
+.new-audit-card {
+    background: var(--card-background);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.new-audit-card h2 {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.new-audit-card p {
+    margin-bottom: 30px;
+    color: #777;
+}
+
+.form-row {
+    display: flex;
+    gap: 30px;
+}
+
+.form-row .input-group {
+    flex: 1;
+}
+
+.file-upload {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+}
+
+.file-upload input[type="text"] {
+    flex-grow: 1;
+    border-right: none;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.file-icon-btn {
+    background-color: #ccc;
+    color: var(--primary-color);
+    padding: 10px 15px;
+    border: 1px solid var(--input-border);
+    border-left: none;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+/* Coordinación */
+
+.coordinacion-card {
+    background: var(--card-background);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.calendar-container {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.calendar-header select,
+.calendar-header input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.time-selector select {
+    width: auto;
+}
+
+.btn-add-event {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: normal;
+    text-transform: none;
+    width: auto;
+    margin-top: 0;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+}
+
+.day-header {
+    font-weight: bold;
+    padding: 10px 5px;
+    color: var(--primary-color);
+}
+
+.calendar-day {
+    padding: 15px 5px;
+    border: 1px solid #eee;
+    min-height: 80px;
+    font-size: 14px;
+}
+
+/* Modales */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.close-btn {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Notificaciones */
+
+.notifications-panel {
+    background: var(--card-background);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.notification-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+}
+
+.notification-item i {
+    color: var(--secondary-color);
+}
+
+/* Cumplimiento */
+
+.compliance-info {
+    background: var(--card-background);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+    body {
+        align-items: flex-start;
+    }
+
+    .login-wrapper,
+    .register-wrapper,
+    .recover-wrapper {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+
+    .login-illustration,
+    .register-illustration,
+    .recover-illustration {
+        display: none;
+    }
+
+    .app-layout {
+        grid-template-columns: 60px 1fr;
+        height: 100vh;
+    }
+
+    .content-area {
+        padding: 15px;
+    }
+
+    .dashboard-grid-small,
+    .dashboard-grid-large,
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+.month-label {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--primary-color);
+}
+
+#calendar-days {
+    display: contents; /* para que respete las 7 columnas de .calendar-grid */
+}
+
+.calendar-day {
+    padding: 12px 5px;
+    border: 1px solid #eee;
+    min-height: 60px;
+    font-size: 14px;
+    cursor: pointer;
+    position: relative;
+}
+
+.calendar-day span.day-number {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.calendar-day.selected {
+    background-color: #fdebd0;
+    border-color: var(--secondary-color);
+}
+
+.calendar-day.has-meetings::after {
+    content: "";
+    width: 6px;
+    height: 6px;
+    background-color: var(--secondary-color);
+    border-radius: 50%;
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+}
+
+.calendar-meetings {
+    margin-top: 15px;
+    padding: 10px;
+    background: var(--card-background);
+    border-radius: 8px;
+    border: 1px solid #eee;
+    font-size: 14px;
+}
+
+.calendar-meetings h3 {
+    font-size: 16px;
+    margin-bottom: 8px;
+}

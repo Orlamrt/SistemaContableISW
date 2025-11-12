@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Contraseña</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="Styles/stylesLR.css">
+</head>
+<body>
+<div class="auth-page">
+    <div class="recover-wrapper">
+        <div class="recover-illustration"></div>
+        <div class="recover-form-card">
+            <h1 class="auth-title">¿Olvidaste tu contraseña?</h1>
+            <p>Ingresa tu correo para restablecerla.</p>
+            <form id="recover-form">
+                <div class="input-group">
+                    <label for="recover-email">EMAIL</label>
+                    <input type="email" id="recover-email" placeholder="Email" required>
+                </div>
+                <button type="submit" class="btn btn-restablecer">Restablecer</button>
+            </form>
+            <div class="auth-links">
+                <a href="index.html">Volver a Iniciar Sesión</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/auth.js"></script>
+</body>
+</html>

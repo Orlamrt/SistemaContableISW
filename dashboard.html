@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sistema de Auditoría Digital</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="Styles/stylesLR.css">
+</head>
+<body>
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="logo">
+            <span>Jul 7 - Aug 21, 2025</span>
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="dashboard.html" class="nav-item active"><i class="fas fa-th-large"></i></a></li>
+                <li><a href="auditorias.html" class="nav-item"><i class="fas fa-search"></i></a></li>
+                <li><a href="notificaciones.html" class="nav-item"><i class="fas fa-bell"></i></a></li>
+                <li><a href="coordinacion.html" class="nav-item"><i class="fas fa-user-friends"></i></a></li>
+                <li><a href="coordinacion.html" class="nav-item"><i class="fas fa-user-friends"></i></a></li>
+                <li><a href="cumplimiento.html" class="nav-item"><i class="fas fa-plus"></i></a></li>
+            </ul>
+        </nav>
+        <div class="logout-btn">
+            <a href="#" class="logout-link"><i class="fas fa-sign-out-alt"></i></a>
+        </div>
+    </aside>
+
+    <main class="content-area">
+        <h1 class="page-title">DashBoard</h1>
+
+        <div class="dashboard-grid-small">
+            <div class="panel-card">
+                <h3 class="card-title">Panel de Seguimiento</h3>
+                <div class="audit-summary">
+                    <div>Auditoría 1: <span class="progress-bar"><span style="width: 50%;"></span></span></div>
+                    <div>Auditoría 2: <span class="progress-bar"><span style="width: 80%;"></span></span></div>
+                </div>
+                <button class="btn-more" data-modal-target="seguimiento-modal">Ver más</button>
+            </div>
+            <div class="panel-card">
+                <h3 class="card-title">Auditorías en curso</h3>
+                <p>Detalle de auditorías en ejecución...</p>
+            </div>
+        </div>
+
+        <div class="kpis-section">
+            <h2>KPIs</h2>
+            <div class="kpis-grid">
+                <div class="kpi-item">
+                    <i class="fas fa-check-circle"></i>
+                    <h4>Auditorías Completadas</h4>
+                    <p>72</p>
+                </div>
+                <div class="kpi-item">
+                    <i class="fas fa-hourglass-half"></i>
+                    <h4>Auditorías Pendientes</h4>
+                    <p>4.8% desde el mes pasado</p>
+                </div>
+                <div class="kpi-item">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h4>Hallazgos Críticos</h4>
+                    <p>15% desde el mes pasado</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid-large">
+            <div class="panel-card">
+                <h3 class="card-title">Gráfico de auditorías por mes</h3>
+                <p>Contenido del gráfico...</p>
+            </div>
+            <div class="panel-card">
+                <h3 class="card-title">Resumen de estado de auditorías</h3>
+                <p>Contenido del resumen...</p>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="seguimiento-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" data-modal-close="seguimiento-modal">&times;</span>
+        <h2 class="modal-title">Panel de Seguimiento</h2>
+        <div class="timeline">
+            <div class="timeline-item active-audit">
+                <h3>Auditoría 1</h3>
+                <div class="progress-steps">
+                    <span class="step completed"></span>
+                    <span class="step completed"></span>
+                    <span class="step current"></span>
+                    <span class="step"></span>
+                </div>
+            </div>
+            <div class="timeline-detail">
+                <div class="detail-step completed">El archivo ha sido enviado con éxito</div>
+                <div class="detail-step completed">El archivo ha sido recibido para su revisión</div>
+                <div class="detail-step current">El proceso de revisión ha iniciado</div>
+                <div class="detail-step">Auditor realiza revisión y comenzó a realizar la auditoría</div>
+                <div class="detail-step">La auditoría se encuentra en proceso de espera a revisión</div>
+            </div>
+        </div>
+        <button class="btn btn-secondary-action">Detalle de ticket / chat (RF-10)</button>
+    </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
