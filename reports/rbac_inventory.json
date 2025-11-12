@@ -1,31 +1,31 @@
 {
   "ui": [
-    {"route": "/index.html", "component": "LoginPage", "roles": ["PUBLIC"]},
-    {"route": "/register.html", "component": "RegisterPage", "roles": ["PUBLIC"]},
-    {"route": "/recover.html", "component": "RecoverPage", "roles": ["PUBLIC"]},
-    {"route": "/reset.html", "component": "ResetPasswordPage", "roles": ["PUBLIC"]},
-    {"route": "/dashboard.html", "component": "Dashboard", "roles": ["ADMIN","AUDITOR","CLIENTE","SOPORTE"]},
-    {"route": "/auditorias.html", "component": "SolicitudesView", "roles": ["ADMIN","AUDITOR","CLIENTE"]},
-    {"route": "/notificaciones.html", "component": "NotificationsView", "roles": ["ADMIN","AUDITOR","CLIENTE","SOPORTE"]},
-    {"route": "/coordinacion.html", "component": "AgendaView", "roles": ["ADMIN","AUDITOR","CLIENTE","SOPORTE"]},
-    {"route": "/cumplimiento.html", "component": "ComplianceView", "roles": ["ADMIN","AUDITOR","CLIENTE"]}
+    { "route": "/", "component": "Login", "roles": ["PUBLIC"] },
+    { "route": "/login", "component": "Login", "roles": ["PUBLIC"] },
+    { "route": "/dashboard", "component": "Dashboard", "roles": ["ADMIN", "AUDITOR", "CLIENTE", "SOPORTE"] },
+    { "route": "/roles/admin", "component": "AdminPanel", "roles": ["ADMIN"] },
+    { "route": "/roles/auditor", "component": "AuditorWorkspace", "roles": ["ADMIN", "AUDITOR"] },
+    { "route": "/roles/cliente", "component": "ClientePortal", "roles": ["CLIENTE"] },
+    { "route": "/roles/soporte", "component": "SoporteInbox", "roles": ["ADMIN", "SOPORTE"] }
   ],
   "api": [
-    {"method":"POST","path":"/auth/register","auth":false,"roles":["PUBLIC"]},
-    {"method":"POST","path":"/auth/login","auth":false,"roles":["PUBLIC"]},
-    {"method":"GET","path":"/auth/me","auth":true,"roles":["ADMIN","AUDITOR","CLIENTE","SOPORTE"]},
-    {"method":"POST","path":"/auth/recover","auth":false,"roles":["PUBLIC"]},
-    {"method":"POST","path":"/auth/reset-password","auth":false,"roles":["PUBLIC"]},
-    {"method":"GET","path":"/audits","auth":true,"roles":["ADMIN","AUDITOR","CLIENTE","SOPORTE"]},
-    {"method":"POST","path":"/audits","auth":true,"roles":["ADMIN","AUDITOR","CLIENTE"]},
-    {"method":"GET","path":"/audits/{id}","auth":true,"roles":["ADMIN","AUDITOR","CLIENTE","SOPORTE"]},
-    {"method":"PATCH","path":"/audits/{id}/status","auth":true,"roles":["ADMIN","AUDITOR"]},
-    {"method":"GET","path":"/notifications","auth":true,"roles":["ADMIN","AUDITOR","CLIENTE","SOPORTE"]},
-    {"method":"PATCH","path":"/notifications/{id}/read","auth":true,"roles":["ADMIN","AUDITOR","CLIENTE","SOPORTE"]},
-    {"method":"GET","path":"/meetings","auth":true,"roles":["ADMIN","AUDITOR","CLIENTE","SOPORTE"]},
-    {"method":"POST","path":"/meetings","auth":true,"roles":["ADMIN","AUDITOR","CLIENTE","SOPORTE"]},
-    {"method":"GET","path":"/compliance/summary","auth":true,"roles":["ADMIN","AUDITOR","CLIENTE"]},
-    {"method":"GET","path":"/dashboard/summary","auth":true,"roles":["ADMIN","AUDITOR","CLIENTE","SOPORTE"]}
+    { "method": "POST", "path": "/auth/register", "auth": false, "roles": ["PUBLIC"] },
+    { "method": "POST", "path": "/auth/login", "auth": false, "roles": ["PUBLIC"] },
+    { "method": "GET", "path": "/auth/me", "auth": true, "roles": ["ADMIN", "AUDITOR", "CLIENTE", "SOPORTE"] },
+    { "method": "POST", "path": "/auth/recover", "auth": false, "roles": ["PUBLIC"] },
+    { "method": "POST", "path": "/auth/reset-password", "auth": false, "roles": ["PUBLIC"] },
+    { "method": "POST", "path": "/audits", "auth": true, "roles": ["ADMIN", "AUDITOR", "CLIENTE"] },
+    { "method": "GET", "path": "/audits", "auth": true, "roles": ["ADMIN", "AUDITOR"] },
+    { "method": "GET", "path": "/audits/mine", "auth": true, "roles": ["ADMIN", "AUDITOR", "CLIENTE", "SOPORTE"] },
+    { "method": "GET", "path": "/audits/{id}", "auth": true, "roles": ["ADMIN", "AUDITOR", "CLIENTE", "SOPORTE"] },
+    { "method": "PATCH", "path": "/audits/{id}/status", "auth": true, "roles": ["ADMIN", "AUDITOR"] },
+    { "method": "GET", "path": "/notifications", "auth": true, "roles": ["ADMIN", "AUDITOR", "CLIENTE", "SOPORTE"] },
+    { "method": "PATCH", "path": "/notifications/{id}/read", "auth": true, "roles": ["ADMIN", "AUDITOR", "CLIENTE", "SOPORTE"] },
+    { "method": "GET", "path": "/meetings", "auth": true, "roles": ["ADMIN", "AUDITOR", "CLIENTE", "SOPORTE"] },
+    { "method": "POST", "path": "/meetings", "auth": true, "roles": ["ADMIN", "AUDITOR", "CLIENTE", "SOPORTE"] },
+    { "method": "GET", "path": "/compliance/summary", "auth": true, "roles": ["ADMIN", "AUDITOR", "CLIENTE"] },
+    { "method": "GET", "path": "/dashboard/summary", "auth": true, "roles": ["ADMIN", "AUDITOR", "CLIENTE", "SOPORTE"] },
+    { "method": "GET", "path": "/admin/users", "auth": true, "roles": ["ADMIN"] }
   ],
   "db": {
     "tables": [
@@ -37,11 +37,9 @@
       "audit_requests",
       "notifications",
       "meetings",
-      "compliance_logs",
-      "password_resets",
       "idempotency_keys",
       "audit_log"
     ],
-    "notes": "Relaciones user_roles/role_permissions soportan RBAC; tablas audit_log e idempotency_keys registran auditoría y operaciones idempotentes."
+    "notes": "Tablas con columna version habilitan control optimista. Las llaves foráneas usan ON DELETE CASCADE."
   }
 }

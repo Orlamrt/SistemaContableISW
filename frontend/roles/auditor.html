@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bandeja del auditor</title>
+  <link rel="stylesheet" href="/assets/styles.css" />
+</head>
+<body data-page="auditor" data-required-roles="ADMIN,AUDITOR">
+  <div data-component="navbar" data-src="/components/navbar.html"></div>
+  <div class="layout">
+    <div data-component="sidebar" data-src="/components/sidebar.html"></div>
+    <main class="page">
+      <header class="page-header">
+        <h1>Bandeja de auditoría</h1>
+        <div class="form-row" style="max-width:320px;">
+          <label for="status-filter">Filtrar por estado</label>
+          <select id="status-filter">
+            <option value="">Todos</option>
+            <option value="en_revision">En revisión</option>
+            <option value="en_proceso">En proceso</option>
+            <option value="completada">Completada</option>
+            <option value="rechazada">Rechazada</option>
+          </select>
+        </div>
+      </header>
+      <section class="panel">
+        <h2 class="section-title">Solicitudes de auditoría</h2>
+        <table class="table" id="audits-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tipo</th>
+              <th>Cliente</th>
+              <th>Estado</th>
+              <th>Actualizado</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="empty-state hidden" id="audits-empty">No hay solicitudes para mostrar.</div>
+      </section>
+      <section class="split">
+        <div class="panel">
+          <h2 class="section-title">Archivos recibidos</h2>
+          <div id="files-list" class="list"></div>
+        </div>
+        <div class="panel">
+          <h2 class="section-title">Normativa y controles</h2>
+          <div id="normativa-list" class="list"></div>
+        </div>
+      </section>
+      <section class="panel">
+        <h2 class="section-title">Historial de acciones</h2>
+        <div id="history-list" class="list"></div>
+      </section>
+    </main>
+  </div>
+  <script src="/assets/app.js" type="module"></script>
+</body>
+</html>

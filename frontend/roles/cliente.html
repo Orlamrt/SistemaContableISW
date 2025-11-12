@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal del cliente</title>
+  <link rel="stylesheet" href="/assets/styles.css" />
+</head>
+<body data-page="cliente" data-required-roles="CLIENTE">
+  <div data-component="navbar" data-src="/components/navbar.html"></div>
+  <div class="layout">
+    <div data-component="sidebar" data-src="/components/sidebar.html"></div>
+    <main class="page">
+      <header class="page-header">
+        <h1>Mi panel de auditoría</h1>
+        <button class="btn btn-primary" id="open-request-modal">Nueva solicitud</button>
+      </header>
+      <section data-component="cards" data-src="/components/cards.html"></section>
+      <section class="panel">
+        <h2 class="section-title">Mis solicitudes</h2>
+        <table class="table" id="my-audits-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tipo</th>
+              <th>Estado</th>
+              <th>Creada</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="empty-state hidden" id="my-audits-empty">No tienes solicitudes aún.</div>
+      </section>
+      <section class="panel">
+        <h2 class="section-title">Notificaciones</h2>
+        <div id="my-notifications" class="list"></div>
+        <div class="empty-state hidden" id="notifications-empty">Sin notificaciones nuevas.</div>
+      </section>
+      <section class="panel">
+        <h2 class="section-title">Reuniones</h2>
+        <table class="table" id="client-meetings">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Notas</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="empty-state hidden" id="client-meetings-empty">Programa tu primera reunión desde la agenda.</div>
+      </section>
+    </main>
+  </div>
+  <div class="modal-backdrop hidden" id="request-modal">
+    <div class="modal">
+      <header>
+        <h2>Nueva solicitud</h2>
+        <button class="modal-close" id="close-request-modal" type="button">×</button>
+      </header>
+      <form id="request-form" enctype="multipart/form-data">
+        <div class="form-row">
+          <label for="request-type">Tipo de auditoría</label>
+          <select id="request-type" required>
+            <option value="">Selecciona...</option>
+            <option value="interna">Interna</option>
+            <option value="externa">Externa</option>
+            <option value="ti">Tecnologías de información</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="request-file">Adjunta evidencia (PDF o CSV)</label>
+          <input id="request-file" type="file" accept=".pdf,.csv" required />
+        </div>
+        <button class="btn btn-primary" type="submit">Enviar solicitud</button>
+      </form>
+    </div>
+  </div>
+  <script src="/assets/app.js" type="module"></script>
+</body>
+</html>

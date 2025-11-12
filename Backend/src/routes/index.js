@@ -6,6 +6,7 @@ const notificationsRouter = require('./notifications');
 const meetingsRouter = require('./meetings');
 const complianceRouter = require('./compliance');
 const dashboardRouter = require('./dashboard');
+const adminRouter = require('./admin');
 
 const router = express.Router();
 
@@ -15,5 +16,6 @@ router.use('/notifications', notificationsRouter);
 router.use('/meetings', meetingsRouter);
 router.use('/compliance', complianceRouter);
 router.use('/dashboard', dashboardRouter);
+router.use('/admin', adminRouter);
 
 module.exports = router;

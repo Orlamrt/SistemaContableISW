@@ -2,25 +2,32 @@
   "repo": "SistemaContableISW",
   "services": ["frontend", "backend"],
   "frontend": {
+    "entry": "frontend/index.html",
     "routes": [
-      "/index.html",
-      "/register.html",
-      "/recover.html",
-      "/reset.html",
-      "/dashboard.html",
-      "/auditorias.html",
-      "/notificaciones.html",
-      "/coordinacion.html",
-      "/cumplimiento.html"
+      "/",
+      "/login",
+      "/dashboard",
+      "/roles/admin",
+      "/roles/auditor",
+      "/roles/cliente",
+      "/roles/soporte"
     ],
-    "scripts": [
-      "js/auth.js",
-      "js/app.js"
+    "components": [
+      "frontend/assets/styles.css",
+      "frontend/assets/app.js",
+      "frontend/components/navbar.html",
+      "frontend/components/sidebar.html",
+      "frontend/components/cards.html"
     ],
-    "state": ["localStorage.token", "localStorage.user"],
+    "state": [
+      "localStorage.token",
+      "localStorage.session.user",
+      "window.__SESSION__"
+    ],
     "rbac": {
+      "menu_renderer": "window.renderNavbarMenu",
       "route_guards": true,
-      "menu_filter": true
+      "data_attributes": "data-required-roles"
     }
   },
   "backend": {
@@ -32,8 +39,9 @@
       "GET /api/auth/me",
       "POST /api/auth/recover",
       "POST /api/auth/reset-password",
-      "GET /api/audits",
       "POST /api/audits",
+      "GET /api/audits",
+      "GET /api/audits/mine",
       "GET /api/audits/:id",
       "PATCH /api/audits/:id/status",
       "GET /api/notifications",
@@ -41,15 +49,39 @@
       "GET /api/meetings",
       "POST /api/meetings",
       "GET /api/compliance/summary",
-      "GET /api/dashboard/summary"
+      "GET /api/dashboard/summary",
+      "GET /api/admin/users"
+    ],
+    "ui": [
+      "GET /",
+      "GET /login",
+      "GET /dashboard",
+      "GET /roles/admin",
+      "GET /roles/auditor",
+      "GET /roles/cliente",
+      "GET /roles/soporte"
     ],
     "middleware": ["requireAuth", "requireRole", "optionalAuth"],
     "services": ["db", "rbac", "idempotency", "audit-log", "authorization"],
-    "dependencies": ["express", "mysql2", "bcryptjs", "jsonwebtoken", "multer", "nodemailer", "cors", "dotenv"]
+    "scripts": [
+      "Backend/scripts/migrate.js",
+      "Backend/scripts/seedUsers.js"
+    ],
+    "dependencies": [
+      "express",
+      "mysql2",
+      "bcryptjs",
+      "jsonwebtoken",
+      "multer",
+      "nodemailer",
+      "cors",
+      "dotenv"
+    ]
   },
   "db": {
     "engine": "mysql",
     "migrations": ["backend/migrations/001_rbac_and_concurrency.sql"],
+    "seeds": ["backend/seeds/001_seed_roles_and_users.sql"],
     "tables": [
       "users",
       "roles",
@@ -69,12 +101,16 @@
     "framework": "node:test",
     "files": [
       "Backend/tests/authorization.test.js",
-      "Backend/tests/idempotency.test.js"
+      "Backend/tests/idempotency.test.js",
+      "Backend/tests/requireRole.test.js"
     ]
   },
   "ci": [],
   "docs": [
     "docs/openapi/openapi.yaml",
-    "docs/plantuml/*.puml"
+    "RUN.md",
+    "reports/gaps.json",
+    "reports/rbac_inventory.json",
+    "reports/acceptance.md"
   ]
 }

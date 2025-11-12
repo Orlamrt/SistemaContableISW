@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel administrador</title>
+  <link rel="stylesheet" href="/assets/styles.css" />
+</head>
+<body data-page="admin" data-required-roles="ADMIN">
+  <div data-component="navbar" data-src="/components/navbar.html"></div>
+  <div class="layout">
+    <div data-component="sidebar" data-src="/components/sidebar.html"></div>
+    <main class="page">
+      <header class="page-header">
+        <h1>Control administrativo</h1>
+        <button class="btn btn-primary" id="open-user-modal">Crear usuario</button>
+      </header>
+      <section data-component="cards" data-src="/components/cards.html"></section>
+      <section class="panel">
+        <h2 class="section-title">Usuarios y roles</h2>
+        <table class="table" id="users-table">
+          <thead>
+            <tr>
+              <th>Correo</th>
+              <th>Roles</th>
+              <th>Estado</th>
+              <th>Actualizado</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="empty-state hidden" id="users-empty">Sin usuarios registrados aún.</div>
+      </section>
+      <section class="split">
+        <div class="panel">
+          <h2 class="section-title">Parámetros de sistema</h2>
+          <ul class="list" id="system-params"></ul>
+        </div>
+        <div class="panel">
+          <h2 class="section-title">Monitoreo</h2>
+          <div id="monitoring" class="list"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div class="modal-backdrop hidden" id="user-modal">
+    <div class="modal">
+      <header>
+        <h2>Nuevo usuario</h2>
+        <button class="modal-close" id="close-user-modal" type="button">×</button>
+      </header>
+      <form id="user-form">
+        <div class="form-row">
+          <label for="new-user-email">Correo</label>
+          <input id="new-user-email" type="email" required />
+        </div>
+        <div class="form-row">
+          <label for="new-user-roles">Roles</label>
+          <select id="new-user-roles" multiple required>
+            <option value="ADMIN">ADMIN</option>
+            <option value="AUDITOR">AUDITOR</option>
+            <option value="CLIENTE">CLIENTE</option>
+            <option value="SOPORTE">SOPORTE</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" type="submit">Guardar</button>
+      </form>
+    </div>
+  </div>
+  <script src="/assets/app.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel de soporte</title>
+  <link rel="stylesheet" href="/assets/styles.css" />
+</head>
+<body data-page="soporte" data-required-roles="SOPORTE,ADMIN">
+  <div data-component="navbar" data-src="/components/navbar.html"></div>
+  <div class="layout">
+    <div data-component="sidebar" data-src="/components/sidebar.html"></div>
+    <main class="page">
+      <header class="page-header">
+        <h1>Centro de soporte</h1>
+        <button class="btn btn-primary" id="refresh-support">Actualizar bandeja</button>
+      </header>
+      <section class="panel">
+        <h2 class="section-title">Tickets abiertos</h2>
+        <div id="tickets-list" class="list"></div>
+        <div class="empty-state hidden" id="tickets-empty">No hay tickets abiertos en este momento.</div>
+      </section>
+      <section class="panel">
+        <h2 class="section-title">Detalle y chat</h2>
+        <div class="list-item" id="ticket-detail">
+          Selecciona un ticket para visualizar las conversaciones.
+        </div>
+      </section>
+      <section class="panel">
+        <h2 class="section-title">Agenda del soporte</h2>
+        <table class="table" id="support-meetings">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Notas</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="empty-state hidden" id="support-meetings-empty">Agenda libre.</div>
+      </section>
+    </main>
+  </div>
+  <script src="/assets/app.js" type="module"></script>
+</body>
+</html>

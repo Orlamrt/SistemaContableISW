@@ -3,11 +3,12 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const config = require('../config');
-const { requireAuth } = require('../middleware/auth');
+const { requireAuth, requireRole } = require('../middleware/auth');
 const { query, transactional } = require('../services/db');
 const { findExistingIdempotentResponse, persistIdempotentResponse } = require('../services/idempotency');
 const { logAuditEvent } = require('../services/audit-log');
 const { canCreateAudit, canReviewAudit, canViewAllAudits } = require('../services/authorization');
+const { ROLE_MAP } = require('../services/rbac');
 
 const router = express.Router();
 
@@ -51,7 +52,12 @@ async function formatAuditRow(row) {
   };
 }
 
-router.post('/', requireAuth(), upload.single('file'), async (req, res, next) => {
+router.post(
+  '/',
+  requireAuth(),
+  requireRole(ROLE_MAP.ADMIN, ROLE_MAP.AUDITOR, ROLE_MAP.CLIENTE),
+  upload.single('file'),
+  async (req, res, next) => {
   try {
     const user = req.user;
     if (!canCreateAudit(user)) {
@@ -117,26 +123,25 @@ router.post('/', requireAuth(), upload.single('file'), async (req, res, next) =>
     }
     return next(err);
   }
-});
+  },
+);
 
-router.get('/', requireAuth(), async (req, res, next) => {
-  try {
-    const user = req.user;
-    const { status, ownerId } = req.query;
+router.get(
+  '/',
+  requireAuth(),
+  requireRole(ROLE_MAP.ADMIN, ROLE_MAP.AUDITOR),
+  async (req, res, next) => {
+    try {
+      const { status, ownerId } = req.query;
     const filters = [];
     const params = [];
     if (status && AUDIT_STATUSES.includes(status)) {
       filters.push('status = ?');
       params.push(status);
     }
-    if (canViewAllAudits(user)) {
-      if (ownerId) {
-        filters.push('user_id = ?');
-        params.push(ownerId);
-      }
-    } else {
+    if (ownerId) {
       filters.push('user_id = ?');
-      params.push(user.id);
+      params.push(ownerId);
     }
     const whereClause = filters.length ? `WHERE ${filters.join(' AND ')}` : '';
     const [rows] = await query(
@@ -151,7 +156,30 @@ router.get('/', requireAuth(), async (req, res, next) => {
   } catch (err) {
     return next(err);
   }
-});
+  },
+);
+
+router.get(
+  '/mine',
+  requireAuth(),
+  requireRole(ROLE_MAP.CLIENTE, ROLE_MAP.AUDITOR, ROLE_MAP.ADMIN, ROLE_MAP.SOPORTE),
+  async (req, res, next) => {
+    try {
+      const userId = req.user.id;
+      const [rows] = await query(
+        `SELECT id, user_id, audit_type, file_path, status, created_at, updated_at, version
+           FROM audit_requests
+          WHERE user_id = ?
+          ORDER BY created_at DESC`,
+        [userId],
+      );
+      const audits = await Promise.all(rows.map(formatAuditRow));
+      return res.json(audits);
+    } catch (err) {
+      return next(err);
+    }
+  },
+);
 
 router.get('/:id', requireAuth(), async (req, res, next) => {
   try {
