@@ -1,33 +1,29 @@
 @startuml
-title Módulo: Atención y Postventa
+title Módulo: Atención y Coordinación
 
 rectangle "Front-End (UI)" {
-  [Listado de Tickets]
-  [Detalle de Ticket]
-  [Crear Comentario]
+  [Calendario]
+  [Agendar Reunión]
 }
 
-rectangle "Back-End (Lógica)" {
-  [TicketsController]
-  [SLAService]
-  [NotificationService]
+rectangle "Back-End (API)" {
+  [MeetingsController]
+  [ConflictChecker]
 }
+
+note right of [MeetingsController]
+  Roles: ADMIN, AUDITOR, CLIENTE y SOPORTE pueden gestionar reuniones.
+end note
 
 database "Base de Datos" {
-  [tickets]
-  [ticket_comments]
-  [sla_events]
+  [meetings]
   [users]
 }
 
-[Listado de Tickets] --> [TicketsController] : GET /tickets
-[Detalle de Ticket] --> [TicketsController] : GET /tickets/{id}
-[Crear Comentario] --> [TicketsController] : POST /tickets/{id}/comments
-[TicketsController] --> [SLAService]
-[TicketsController] --> [tickets]
-[SLAService] --> [sla_events]
-[TicketsController] --> [ticket_comments]
-[tickets] --> [users]
-[ticket_comments] --> [users]
+[Calendario] --> [MeetingsController] : GET /meetings
+[Agendar Reunión] --> [MeetingsController] : POST /meetings
+[MeetingsController] --> [ConflictChecker]
+[MeetingsController] --> [meetings]
+[meetings] --> [users]
 
 @enduml

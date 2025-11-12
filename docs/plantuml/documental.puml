@@ -1,31 +1,30 @@
 @startuml
 title Módulo: Gestión Documental
 
-rectangle "Front-End (UI)" {
+rectangle "Front-End" {
   [Repositorio Documental]
   [Visor Documento]
-  [Historial de Versiones]
 }
 
-rectangle "Back-End (Lógica)" {
+rectangle "Back-End" {
   [DocumentController]
-  [AccessControlService]
-  [VersioningService]
+  [VersionService]
 }
+
+note right of [DocumentController]
+  Roles previstos: ADMIN y AUDITOR administran, CLIENTE consulta documentos propios.
+end note
 
 database "Base de Datos" {
   [documents]
   [document_versions]
-  [document_permissions]
+  [users]
 }
 
-[Repositorio Documental] --> [DocumentController] : GET /documents
-[Visor Documento] --> [DocumentController] : GET /documents/{id}
-[Historial de Versiones] --> [VersioningService]
-[DocumentController] --> [AccessControlService]
-[DocumentController] --> [documents]
-[VersioningService] --> [document_versions]
-[AccessControlService] --> [document_permissions]
-[document_permissions] --> [documents]
+[Repositorio Documental] --> [DocumentController]
+[Visor Documento] --> [DocumentController]
+[DocumentController] --> [VersionService]
+[VersionService] --> [document_versions]
+[documents] --> [users]
 
 @enduml

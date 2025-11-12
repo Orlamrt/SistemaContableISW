@@ -1,31 +1,32 @@
 @startuml
-title Módulo: Seguimiento y Panel
+title Módulo: Seguimiento y Dashboard
 
-rectangle "Front-End (UI)" {
+rectangle "Front-End" {
   [Dashboard]
-  [Widget KPIs]
-  [Centro de Notificaciones]
+  [KPIs por Rol]
 }
 
-rectangle "Back-End (Lógica)" {
-  [DashboardService]
-  [NotificationService]
-  [MetricsAggregator]
+rectangle "Back-End" {
+  [DashboardController]
+  [AggregationService]
 }
+
+note right of [DashboardController]
+  Roles: todos los autenticados (ADMIN, AUDITOR, CLIENTE, SOPORTE) reciben KPIs filtrados.
+end note
 
 database "Base de Datos" {
   [audit_requests]
   [notifications]
+  [meetings]
   [compliance_logs]
 }
 
-[Dashboard] --> [DashboardService]
-[Widget KPIs] --> [MetricsAggregator]
-[Centro de Notificaciones] --> [NotificationService]
-[DashboardService] --> [audit_requests]
-[MetricsAggregator] --> [audit_requests]
-[MetricsAggregator] --> [compliance_logs]
-[NotificationService] --> [notifications]
-[notifications] --> [audit_requests]
+[Dashboard] --> [DashboardController] : GET /dashboard/summary
+[DashboardController] --> [AggregationService]
+[AggregationService] --> [audit_requests]
+[AggregationService] --> [notifications]
+[AggregationService] --> [meetings]
+[AggregationService] --> [compliance_logs]
 
 @enduml

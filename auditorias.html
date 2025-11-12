@@ -17,7 +17,7 @@
             <ul>
                 <li><a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i></a></li>
                 <li><a href="auditorias.html" class="nav-item active"><i class="fas fa-search"></i></a></li>
-                <li><a href="notificaciones.html" class="nav-item"><i class="fas fa-bell"></i></a></li>
+                <li><a href="notificaciones.html" class="nav-item"><i class="fa fa-bell"></i></a></li>
                 <li><a href="coordinacion.html" class="nav-item"><i class="fas fa-user-friends"></i></a></li>
                 <li><a href="cumplimiento.html" class="nav-item"><i class="fas fa-plus"></i></a></li>
             </ul>
@@ -55,8 +55,35 @@
                 </div>
             </form>
         </div>
+
+        <section class="audit-listing">
+            <div class="audit-listing__header">
+                <h2>Solicitudes registradas</h2>
+                <label>
+                    Filtrar por estado
+                    <select id="audit-status-filter" class="input-select">
+                        <option value="">Todos</option>
+                        <option value="enviada">Enviada</option>
+                        <option value="en_revision">En revisión</option>
+                        <option value="en_proceso">En proceso</option>
+                        <option value="completada">Completada</option>
+                        <option value="rechazada">Rechazada</option>
+                    </select>
+                </label>
+            </div>
+            <div id="audit-list" class="audit-table-placeholder">
+                <p>Cargando solicitudes...</p>
+            </div>
+        </section>
     </main>
 </div>
 <script src="js/app.js"></script>
+<script>
+    document.getElementById('audit-status-filter') && document.getElementById('audit-status-filter').addEventListener('change', () => {
+        if (typeof loadAudits === 'function') {
+            loadAudits();
+        }
+    });
+</script>
 </body>
 </html>

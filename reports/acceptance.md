@@ -1,79 +1,58 @@
-# Criterios de Aceptación por Requisito Funcional
+# Criterios de aceptación por requisito funcional
 
 ## RF-01 Autenticación (Login)
-- Se muestra formulario con campos email y contraseña y validación instantánea.
-- Permite iniciar sesión con credenciales válidas y retorna JWT vigente 8h.
-- Bloquea tras 5 intentos fallidos con mensaje y desbloqueo tras 15 minutos.
-- Registro de intentos fallidos en bitácora y métricas para monitoreo.
+- Formularios de login/registro disponibles para usuarios públicos.
+- Login válido devuelve JWT con roles y permisos del usuario.
+- Endpoint `/auth/me` protegido disponible para recuperar sesión.
+- **Pendiente:** bloqueo automático tras intentos fallidos y métricas en CI.
 
 ## RF-02 Recuperación de contraseña
-- Usuario ingresa email y recibe enlace firmado con expiración ≤1h.
-- Token se invalida tras un uso o al expirar.
-- Flujo notifica éxito/fracaso y registra en bitácora.
-- Pruebas cubren escenarios válido, expirado y token inválido.
+- Flujo de recuperación genera token con hash y expiración de 1 hora.
+- Reset de contraseña invalida el token y actualiza la versión del usuario.
+- **Pendiente:** envío de correo productivo y pruebas de expiración.
 
 ## RF-03 Gestión de solicitudes
-- Listado paginado con filtros por estado, tipo y fecha.
-- Creación de nueva solicitud valida campos obligatorios y adjunta archivo.
-- Transición de estados controlada por roles con historial auditable.
-- UI muestra detalle, comentarios y trazabilidad de cambios.
+- Roles CLIENTE/AUDITOR/ADMIN pueden crear solicitudes (con archivo obligatorio) y reciben notificación.
+- Listado de solicitudes filtra por estado y respeta ownership del CLIENTE.
+- Cambio de estado con control optimista y notificación al solicitante.
+- **Pendiente:** detalle enriquecido, paginación y descarga segura del adjunto.
 
 ## RF-04 Carga de archivos
-- UI restringe formatos (PDF/CSV) y tamaño configurable.
-- Backend valida MIME, extensión, hash y antivirus antes de almacenar.
-- Respuestas claras con código y detalle de error.
-- Registro de hash y metadatos en base de datos para deduplicación.
+- Validación de tipo/tamaño en frontend y backend con soporte para Idempotency-Key.
+- Los archivos se almacenan en `/uploads` y quedan ligados a la solicitud.
+- **Pendiente:** cálculo de hash, análisis antivirus y política de retención.
 
 ## RF-05 Gestión documental
-- Repositorio documenta versiones con permisos por rol.
-- Visor permite previsualizar PDF/CSV y descargar con tracking.
-- Operaciones (crear, actualizar, archivar) requieren confirmación y quedan auditadas.
-- Integración con solicitudes para adjuntar/consultar documentos.
+- **Pendiente en esta iteración.** No existe repositorio versionado ni endpoints específicos.
 
 ## RF-06 Validación de archivos
-- Servicio asíncrono procesa archivos y genera resultado (válido, con advertencias, rechazado).
-- UI muestra estado en tiempo real con logs de validación.
-- Errores críticos notifican al usuario y quedan disponibles para descarga.
-- Reintentos configurables con política de backoff.
+- **Pendiente en esta iteración.** Falta motor de validación y registro de resultados.
 
 ## RF-07 Panel de seguimiento
-- Dashboard dinámico muestra KPIs por rol (solicitudes activas, SLA, alertas).
-- Widgets interactivos con filtros por rango de fechas y tipo.
-- Datos provenientes de endpoints agregados con caché y control de acceso.
-- Registro de eventos de visualización para auditoría.
+- Dashboard consulta `/dashboard/summary` y ajusta KPIs según rol.
+- Modal de seguimiento disponible y navegación oculta opciones según permisos.
+- **Pendiente:** gráficos interactivos y filtros temporales avanzados.
 
 ## RF-08 Informes
-- Usuario puede solicitar generación de informe (PDF y CSV) y seguir progreso.
-- Generación ocurre en job asíncrono, versiona resultado y almacena metadatos.
-- Descarga requiere autorización y registra auditoría.
-- Pruebas verifican contenido, firma y checksum del informe.
+- **Pendiente en esta iteración.** No hay generación ni descarga de informes.
 
 ## RF-09 Notificaciones
-- Sistema envía notificaciones in-app y correo en eventos clave (nueva solicitud, validación, informe).
-- Centro de notificaciones permite marcar como leído y filtrar por tipo.
-- Eventos usan cola con idempotencia y retries en caso de fallo.
-- Historial accesible con filtros y exportación.
+- Listado protegido para cada usuario con marca de leídos vía API.
+- Se crean notificaciones en eventos de auditoría.
+- **Pendiente:** entrega multicanal y marcación directa desde UI.
 
 ## RF-10 Postventa (tickets)
-- UI permite crear ticket, responder, cerrar y reabrir.
-- SLA calculado según prioridad y muestra estado restante.
-- Notificaciones automáticas en vencimientos y actualizaciones.
-- Reportes disponibles por cliente/agente.
+- **Pendiente en esta iteración.** Falta modelo de tickets y UI asociada.
 
 ## RF-11 Agenda
-- Calendario permite crear, editar, cancelar reuniones con detección de conflictos.
-- Recordatorios se envían por correo/notificación según preferencia.
-- Integración opcional con calendarios externos (iCal export/import).
-- Historial registra cambios y asistentes confirmados.
+- Calendario permite crear reuniones evitando conflictos de 30 minutos mediante locking.
+- Roles autorizados: ADMIN, AUDITOR, CLIENTE, SOPORTE.
+- **Pendiente:** invitaciones a terceros, recordatorios y edición/cancelación.
 
 ## RF-12 Monitoreo IA
-- Definición de reglas/keywords para monitorear cumplimiento IA.
-- Alertas generadas se muestran con severidad y evidencia vinculada.
-- Revisiones requieren confirmación de auditor con bitácora de acciones.
-- Panel de métricas muestra tendencias y acciones correctivas.
+- Resumen `/compliance/summary` devuelve vista completa (ADMIN/AUDITOR) o resumida (CLIENTE).
+- **Pendiente:** motor de reglas IA y gestión de alertas contextual.
 
 ## RF-13 Historial
-- Tabla de auditoría captura actor, recurso, acción, antes/después y timestamp.
-- UI permite filtrar por fecha, módulo, usuario y exportar CSV/JSON.
-- Endpoint soporta paginación, filtros y orden.
-- Protección de integridad mediante firma o hash por registro.
+- Tabla `audit_log` registra cambios clave (estado de auditorías).
+- **Pendiente:** exponer API/UI para consulta, firma de registros y exportaciones.

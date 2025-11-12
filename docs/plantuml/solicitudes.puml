@@ -13,20 +13,29 @@ rectangle "Back-End (Lógica)" {
   [NotificationService]
 }
 
+note right of [AuditsController]
+  Roles:
+  * ADMIN/AUDITOR: ver todas y actualizar estado
+  * CLIENTE: crear y ver propias
+  * SOPORTE: lectura de referencia
+end note
+
 database "Base de Datos" {
   [audit_requests]
   [notifications]
   [users]
+  [idempotency_keys]
 }
 
 [Formulario Nueva Solicitud] --> [AuditsController] : POST /audits
 [Listado Solicitudes] --> [AuditsController] : GET /audits
+[Dashboard Solicitudes] --> [AuditsController] : GET /audits/{id}
 [AuditsController] --> [UploadService]
 [AuditsController] --> [audit_requests]
 [UploadService] --> [audit_requests]
 [AuditsController] --> [NotificationService]
 [NotificationService] --> [notifications]
-[notifications] --> [users]
 [audit_requests] --> [users]
+[idempotency_keys] --> [users]
 
 @enduml
