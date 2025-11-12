@@ -158,6 +158,23 @@ components:
               id: { type: integer }
               description: { type: string }
               status: { type: string }
+    AdminUser:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+          format: email
+        roles:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
               checked_at:
                 type: string
                 format: date-time
@@ -305,7 +322,7 @@ paths:
       tags: [Audits]
       security:
         - bearerAuth: []
-      x-roles: [ADMIN, AUDITOR, CLIENTE, SOPORTE]
+      x-roles: [ADMIN, AUDITOR]
       parameters:
         - in: query
           name: status
@@ -315,7 +332,7 @@ paths:
             enum: [enviada, en_revision, en_proceso, completada, rechazada]
       responses:
         '200':
-          description: Colección de solicitudes visibles para el usuario
+          description: Colección de solicitudes disponibles para los roles con acceso global
           content:
             application/json:
               schema:
@@ -324,6 +341,23 @@ paths:
                   $ref: '#/components/schemas/Audit'
         '401': { description: Token inválido }
         '403': { description: Acceso denegado }
+  /audits/mine:
+    get:
+      summary: Listar solicitudes del usuario autenticado
+      tags: [Audits]
+      security:
+        - bearerAuth: []
+      x-roles: [ADMIN, AUDITOR, CLIENTE, SOPORTE]
+      responses:
+        '200':
+          description: Solicitudes pertenecientes al usuario autenticado
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Audit'
+        '401': { description: Token inválido }
     post:
       summary: Registrar nueva solicitud de auditoría
       description: Requiere encabezado `Idempotency-Key` para idempotencia.
@@ -489,5 +523,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DashboardSummary'
+  /admin/users:
+    get:
+      summary: Listar usuarios y roles asignados
+      tags: [Admin]
+      security:
+        - bearerAuth: []
+      x-roles: [ADMIN]
+      responses:
+        '200':
+          description: Colección de usuarios con sus roles actuales
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdminUser'
+        '401': { description: Token inválido }
+        '403': { description: Acceso denegado }
 security:
   - bearerAuth: []

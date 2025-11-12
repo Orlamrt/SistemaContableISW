@@ -1,91 +1,213 @@
 {
   "RF-01": {
     "status": "partial",
-    "by_role": {
-      "ADMIN": {"api": ["Falta política de bloqueo tras intentos fallidos"], "tests": ["Simular bloqueo y desbloqueo"], "docs": ["Guía de rotación de secretos"]},
-      "CLIENTE": {"ui": ["Mensajes más explícitos ante error"], "tests": ["flujo login inválido"]}
-    }
+    "implemented": [
+      "frontend/index.html",
+      "frontend/assets/app.js",
+      "Backend/src/routes/auth.js"
+    ],
+    "missing": [
+      "Bloqueo temporal tras intentos fallidos",
+      "Registro de eventos de autenticación en audit_log"
+    ],
+    "plan": [
+      "Crear tabla login_attempts y middleware para contar intentos",
+      "Agregar prueba end-to-end que cubra bloqueo/desbloqueo",
+      "Documentar política de rotación de secretos en RUN.md"
+    ]
   },
   "RF-02": {
     "status": "partial",
-    "by_role": {
-      "CLIENTE": {"backend": ["Enviar correo real con throttling"], "tests": ["token expirado"], "docs": ["procedimiento de soporte"]},
-      "AUDITOR": {"docs": ["auditar solicitudes de reset"], "ci": ["alertas por uso excesivo"]}
-    }
+    "implemented": [
+      "Recuperación de contraseña en Backend/src/routes/auth.js",
+      "Soporte de token hash en backend/migrations/001_rbac_and_concurrency.sql"
+    ],
+    "missing": [
+      "Entrega de correos productivos con rate limiting",
+      "Pruebas automáticas para expiración de tokens"
+    ],
+    "plan": [
+      "Configurar cola y proveedor SMTP real",
+      "Agregar spec de expiración en tests automatizados",
+      "Describir procedimiento de soporte en reports/acceptance.md"
+    ]
   },
   "RF-03": {
     "status": "partial",
-    "by_role": {
-      "AUDITOR": {"ui": ["filtros avanzados"], "api": ["paginación y búsqueda"], "tests": ["e2e actualización estado"], "docs": ["ciclo de vida completo"]},
-      "CLIENTE": {"ui": ["detalle con seguimiento"], "api": ["descarga segura de archivos"]}
-    }
+    "implemented": [
+      "Backend/src/routes/audits.js",
+      "frontend/roles/auditor.html",
+      "frontend/roles/cliente.html"
+    ],
+    "missing": [
+      "Paginación y búsqueda avanzada",
+      "Descarga segura de adjuntos",
+      "Pruebas de concurrencia para cambios de estado"
+    ],
+    "plan": [
+      "Agregar filtros server-side con índices dedicados",
+      "Firmar URLs de descarga en servicio de archivos",
+      "Automatizar prueba e2e de cambio de estado con control optimista"
+    ]
   },
   "RF-04": {
     "status": "partial",
-    "by_role": {
-      "AUDITOR": {"backend": ["antivirus y hash del archivo"], "db": ["metadatos tamaño/hash"], "tests": ["subida inválida"]},
-      "ADMIN": {"docs": ["política de retención"], "ci": ["escaneo antivirus"]}
-    }
+    "implemented": [
+      "Carga de archivos con multer en Backend/src/routes/audits.js",
+      "Modal de solicitud en frontend/roles/cliente.html",
+      "Control de idempotencia en Backend/src/services/idempotency.js"
+    ],
+    "missing": [
+      "Cálculo de hash y escaneo antivirus",
+      "Política de retención documentada"
+    ],
+    "plan": [
+      "Integrar servicio de hashing y tabla de metadatos",
+      "Conectar escáner antivirus antes de persistir",
+      "Añadir guía de retención a RUN.md"
+    ]
   },
   "RF-05": {
     "status": "missing",
-    "by_role": {
-      "AUDITOR": {"ui": ["visor documental"], "api": ["CRUD documentos"], "db": ["tabla documents"], "tests": ["permisos descarga"]},
-      "ADMIN": {"docs": ["procedimientos de versionado"]}
-    }
+    "implemented": [],
+    "missing": [
+      "Modelo y API de documentos versionados",
+      "UI para visor documental",
+      "Pruebas de permisos de descarga"
+    ],
+    "plan": [
+      "Diseñar tabla documents con control de versiones",
+      "Construir componente web para visualización",
+      "Crear pruebas node:test para restricción por rol"
+    ]
   },
   "RF-06": {
     "status": "missing",
-    "by_role": {
-      "AUDITOR": {"backend": ["motor de validación asíncrono"], "db": ["log de validación"], "tests": ["procesamiento paralelo"]}
-    }
+    "implemented": [],
+    "missing": [
+      "Motor de validación asíncrono",
+      "Registro de resultados por archivo",
+      "Pruebas de procesamiento paralelo"
+    ],
+    "plan": [
+      "Crear cola y worker de validación",
+      "Persistir resultados en tabla audit_validations",
+      "Instrumentar pruebas de resiliencia ante cargas altas"
+    ]
   },
   "RF-07": {
     "status": "partial",
-    "by_role": {
-      "ADMIN": {"ui": ["gráficas interactivas"], "api": ["segmentación por rango"]},
-      "CLIENTE": {"ui": ["indicadores personalizados"], "tests": ["visibilidad según rol"]}
-    }
+    "implemented": [
+      "frontend/dashboard.html",
+      "Backend/src/routes/dashboard.js",
+      "frontend/components/cards.html"
+    ],
+    "missing": [
+      "Gráficos interactivos",
+      "Segmentación por rango temporal"
+    ],
+    "plan": [
+      "Integrar biblioteca de gráficos ligera",
+      "Extender API con filtros de fechas",
+      "Añadir smoke test para visibilidad por rol"
+    ]
   },
   "RF-08": {
     "status": "missing",
-    "by_role": {
-      "AUDITOR": {"api": ["generación de informes"], "db": ["historial de informes"], "tests": ["descarga por rol"], "docs": ["formato de reporte"]}
-    }
+    "implemented": [],
+    "missing": [
+      "Generación de informes",
+      "Historial y descargas",
+      "Pruebas de permisos"
+    ],
+    "plan": [
+      "Crear servicio informes en Backend/src/services",
+      "Agregar tabla reports con versionado",
+      "Cubrir flujo con pruebas de integración"
+    ]
   },
   "RF-09": {
     "status": "partial",
-    "by_role": {
-      "CLIENTE": {"backend": ["notificaciones por correo"], "ui": ["marcar como leída desde UI"], "tests": ["webhook duplicado"]},
-      "AUDITOR": {"docs": ["catálogo de eventos"]}
-    }
+    "implemented": [
+      "Backend/src/routes/notifications.js",
+      "frontend/roles/cliente.html",
+      "frontend/roles/soporte.html"
+    ],
+    "missing": [
+      "Notificaciones por correo",
+      "Marcado masivo desde la UI"
+    ],
+    "plan": [
+      "Exponer webhook SMTP para eventos críticos",
+      "Agregar acciones bulk en frontend/assets/app.js",
+      "Extender pruebas node:test a rutas PATCH"
+    ]
   },
   "RF-10": {
-    "status": "missing",
-    "by_role": {
-      "CLIENTE": {"ui": ["portal de tickets"], "api": ["CRUD tickets"], "db": ["tabla tickets"], "tests": ["flujo completo"]},
-      "SOPORTE": {"docs": ["SLA y escalamiento"]}
-    }
+    "status": "partial",
+    "implemented": [
+      "frontend/roles/soporte.html"
+    ],
+    "missing": [
+      "Modelo y API de tickets",
+      "Chat en tiempo real",
+      "Pruebas de flujo completo"
+    ],
+    "plan": [
+      "Diseñar tabla tickets y endpoints CRUD",
+      "Integrar canal WebSocket o SSE para chat",
+      "Automatizar pruebas de creación/cierre"
+    ]
   },
   "RF-11": {
     "status": "partial",
-    "by_role": {
-      "AUDITOR": {"backend": ["invitación multiusuario"], "ui": ["sincronización externa"], "tests": ["conflicto entre usuarios"]},
-      "CLIENTE": {"ui": ["recordatorios y cancelación"], "docs": ["protocolo de agenda"]}
-    }
+    "implemented": [
+      "Backend/src/routes/meetings.js",
+      "frontend/dashboard.html",
+      "frontend/roles/cliente.html"
+    ],
+    "missing": [
+      "Invitaciones multiusuario",
+      "Recordatorios automáticos",
+      "Gestión de cancelaciones"
+    ],
+    "plan": [
+      "Agregar tabla meeting_invites",
+      "Enviar recordatorios vía cron",
+      "Exponer endpoints PATCH/DELETE para reuniones"
+    ]
   },
   "RF-12": {
     "status": "partial",
-    "by_role": {
-      "AUDITOR": {"backend": ["motor IA real"], "ui": ["clasificación de alertas"], "tests": ["alertas críticas"], "docs": ["manual de revisión"]},
-      "CLIENTE": {"ui": ["historial de acciones"], "docs": ["limitación de responsabilidades"]}
-    }
+    "implemented": [
+      "Backend/src/routes/compliance.js",
+      "frontend/roles/auditor.html"
+    ],
+    "missing": [
+      "Motor IA real para clasificación",
+      "Historial de acciones sugeridas"
+    ],
+    "plan": [
+      "Integrar proveedor IA y servicio dedicado",
+      "Persistir recomendaciones y métricas",
+      "Aumentar cobertura de pruebas con casos de alerta"
+    ]
   },
   "RF-13": {
     "status": "partial",
-    "by_role": {
-      "ADMIN": {"api": ["exponer audit_log"], "ui": ["buscador avanzado"], "tests": ["trazabilidad multi entidad"], "docs": ["politica de retención"]},
-      "AUDITOR": {"db": ["firmado de registros"], "ci": ["exportes automáticos"]}
-    }
+    "implemented": [
+      "backend/migrations/001_rbac_and_concurrency.sql",
+      "Backend/src/services/audit-log.js"
+    ],
+    "missing": [
+      "API y UI para consulta de historial",
+      "Firmado de registros",
+      "Exportaciones automatizadas"
+    ],
+    "plan": [
+      "Crear endpoint protegido /api/audit-log",
+      "Implementar firma digital por registro",
+      "Programar exportes y almacenamiento en frío"
+    ]
   }
 }

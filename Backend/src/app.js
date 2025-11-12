@@ -3,6 +3,7 @@ const cors = require('cors');
 const path = require('path');
 const config = require('./config');
 const routes = require('./routes');
+const uiRouter = require('./routes/ui');
 const { initPool } = require('./services/db');
 const { ensureDefaultAdmin } = require('./services/rbac');
 
@@ -21,7 +22,11 @@ function createApp() {
     credentials: true,
   }));
 
+  const frontendDir = path.resolve(__dirname, '..', '..', 'frontend');
+  app.use('/assets', express.static(path.join(frontendDir, 'assets')));
+  app.use('/components', express.static(path.join(frontendDir, 'components')));
   app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+  app.use('/', uiRouter);
   app.use('/api', routes);
 
   app.use((err, _req, res, _next) => {

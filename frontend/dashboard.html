@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Auditoría Digital</title>
+  <link rel="stylesheet" href="/assets/styles.css" />
+</head>
+<body data-page="dashboard" data-required-roles="ADMIN,AUDITOR,CLIENTE,SOPORTE">
+  <div data-component="navbar" data-src="/components/navbar.html"></div>
+  <div class="layout">
+    <div data-component="sidebar" data-src="/components/sidebar.html"></div>
+    <main class="page">
+      <header class="page-header">
+        <h1>Dashboard general</h1>
+        <button class="btn btn-secondary" id="refresh-dashboard">Actualizar métricas</button>
+      </header>
+      <section data-component="cards" data-src="/components/cards.html"></section>
+      <section class="panel">
+        <h2 class="section-title">Actividades recientes</h2>
+        <div id="activity-list" class="list"></div>
+        <div class="empty-state hidden" id="activity-empty">Sin novedades por el momento.</div>
+      </section>
+      <section class="panel">
+        <h2 class="section-title">Próximas reuniones</h2>
+        <table class="table" id="meetings-table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Notas</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="empty-state hidden" id="meetings-empty">No hay reuniones próximas.</div>
+      </section>
+    </main>
+  </div>
+  <script src="/assets/app.js" type="module"></script>
+</body>
+</html>

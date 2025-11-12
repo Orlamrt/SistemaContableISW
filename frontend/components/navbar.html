@@ -1,0 +1,39 @@
+<nav class="topbar">
+  <a href="/dashboard" class="brand">Auditoría Digital</a>
+  <ul id="menu"></ul>
+  <button class="btn btn-secondary" id="logout-btn" type="button">Cerrar sesión</button>
+</nav>
+<script>
+  (function () {
+    const user = window.__SESSION__ || { roles: [] };
+    const items = [
+      { label: 'Admin', href: '/roles/admin', roles: ['ADMIN'] },
+      { label: 'Auditor', href: '/roles/auditor', roles: ['AUDITOR', 'ADMIN'] },
+      { label: 'Cliente', href: '/roles/cliente', roles: ['CLIENTE'] },
+      { label: 'Soporte', href: '/roles/soporte', roles: ['SOPORTE', 'ADMIN'] },
+    ];
+    function render(target, profile) {
+      const menu = target;
+      menu.innerHTML = '';
+      items.forEach((item) => {
+        if (!profile.roles || !item.roles.some((role) => profile.roles.includes(role))) {
+          return;
+        }
+        const li = document.createElement('li');
+        const anchor = document.createElement('a');
+        anchor.href = item.href;
+        anchor.textContent = item.label;
+        if (window.location.pathname === item.href) {
+          anchor.classList.add('active');
+        }
+        li.appendChild(anchor);
+        menu.appendChild(li);
+      });
+    }
+    const menu = document.getElementById('menu');
+    if (menu) {
+      render(menu, user);
+    }
+    window.renderNavbarMenu = (profile) => render(menu, profile || user);
+  }());
+</script>
