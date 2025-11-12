@@ -1,0 +1,74 @@
+{
+  "repo": "SistemaContableISW",
+  "services": ["frontend", "backend"],
+  "frontend": {
+    "routes": [
+      "/index.html",
+      "/register.html",
+      "/recover.html",
+      "/reset.html",
+      "/dashboard.html",
+      "/auditorias.html",
+      "/notificaciones.html",
+      "/coordinacion.html",
+      "/cumplimiento.html"
+    ],
+    "components": [
+      "js/auth.js",
+      "js/app.js"
+    ],
+    "state": [
+      "localStorage.token",
+      "localStorage.user"
+    ]
+  },
+  "backend": {
+    "entry": "Backend/server.js",
+    "endpoints": [
+      "POST /api/auth/register",
+      "POST /api/auth/login",
+      "POST /api/auth/recover",
+      "POST /api/auth/reset-password",
+      "POST /api/audits",
+      "GET /api/audits",
+      "GET /api/notifications",
+      "POST /api/meetings",
+      "GET /api/meetings",
+      "GET /api/compliance/summary"
+    ],
+    "middleware": [
+      "authMiddleware"
+    ],
+    "jobs": [],
+    "dependencies": ["express", "mysql2", "bcryptjs", "jsonwebtoken", "multer", "nodemailer"]
+  },
+  "db": {
+    "engine": "mysql",
+    "schemas": ["auditoria_digital"],
+    "tables": [
+      "users",
+      "audit_requests",
+      "notifications",
+      "meetings",
+      "compliance_logs",
+      "password_resets"
+    ],
+    "migrations": []
+  },
+  "tests": {
+    "unit": 0,
+    "integration": 0,
+    "e2e": 0,
+    "coverage": "0%"
+  },
+  "ci": [],
+  "docs": [],
+  "orphans": [
+    "Styles/stylesSA.css",
+    "auditorias.html",
+    "coordinacion.html",
+    "cumplimiento.html",
+    "dashboard.html",
+    "notificaciones.html"
+  ]
+}

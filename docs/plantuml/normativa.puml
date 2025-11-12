@@ -1,0 +1,31 @@
+@startuml
+title Módulo: Cumplimiento e IA
+
+rectangle "Front-End (UI)" {
+  [Panel Cumplimiento]
+  [Alertas IA]
+  [Historial de Evaluaciones]
+}
+
+rectangle "Back-End (Lógica)" {
+  [ComplianceController]
+  [AI_MonitorService]
+  [AlertingService]
+}
+
+database "Base de Datos" {
+  [compliance_logs]
+  [ai_alerts]
+  [audit_log]
+}
+
+[Panel Cumplimiento] --> [ComplianceController] : GET /compliance/summary
+[Alertas IA] --> [AI_MonitorService]
+[Historial de Evaluaciones] --> [ComplianceController]
+[ComplianceController] --> [compliance_logs]
+[AI_MonitorService] --> [ai_alerts]
+[AlertingService] --> [ai_alerts]
+[AlertingService] --> [audit_log]
+[ai_alerts] --> [audit_log]
+
+@enduml

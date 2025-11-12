@@ -1,0 +1,32 @@
+@startuml
+title Módulo: Solicitudes de Auditoría
+
+rectangle "Front-End (UI)" {
+  [Dashboard Solicitudes]
+  [Formulario Nueva Solicitud]
+  [Listado Solicitudes]
+}
+
+rectangle "Back-End (Lógica)" {
+  [AuditsController]
+  [UploadService]
+  [NotificationService]
+}
+
+database "Base de Datos" {
+  [audit_requests]
+  [notifications]
+  [users]
+}
+
+[Formulario Nueva Solicitud] --> [AuditsController] : POST /audits
+[Listado Solicitudes] --> [AuditsController] : GET /audits
+[AuditsController] --> [UploadService]
+[AuditsController] --> [audit_requests]
+[UploadService] --> [audit_requests]
+[AuditsController] --> [NotificationService]
+[NotificationService] --> [notifications]
+[notifications] --> [users]
+[audit_requests] --> [users]
+
+@enduml

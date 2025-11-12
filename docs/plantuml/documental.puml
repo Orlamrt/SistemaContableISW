@@ -1,0 +1,31 @@
+@startuml
+title Módulo: Gestión Documental
+
+rectangle "Front-End (UI)" {
+  [Repositorio Documental]
+  [Visor Documento]
+  [Historial de Versiones]
+}
+
+rectangle "Back-End (Lógica)" {
+  [DocumentController]
+  [AccessControlService]
+  [VersioningService]
+}
+
+database "Base de Datos" {
+  [documents]
+  [document_versions]
+  [document_permissions]
+}
+
+[Repositorio Documental] --> [DocumentController] : GET /documents
+[Visor Documento] --> [DocumentController] : GET /documents/{id}
+[Historial de Versiones] --> [VersioningService]
+[DocumentController] --> [AccessControlService]
+[DocumentController] --> [documents]
+[VersioningService] --> [document_versions]
+[AccessControlService] --> [document_permissions]
+[document_permissions] --> [documents]
+
+@enduml
