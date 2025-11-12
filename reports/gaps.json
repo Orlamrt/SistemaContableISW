@@ -1,0 +1,145 @@
+{
+  "RF-01": {
+    "status": "partial",
+    "missing": ["backend:lockout", "tests:e2e", "docs:openapi", "ci:lint"],
+    "risks": ["No hay política anti fuerza bruta", "Tokens JWT con secreto débil"],
+    "plan": [
+      "Agregar tabla y lógica de intentos fallidos con bloqueo temporal",
+      "Actualizar almacenamiento de secretos y rotación de JWT",
+      "Cubrir flujo login success/error con pruebas unitarias y e2e",
+      "Documentar contrato en OpenAPI y guías de uso"
+    ]
+  },
+  "RF-02": {
+    "status": "partial",
+    "missing": ["ui:email-feedback", "backend:mailer", "tests:e2e", "docs:swagger"],
+    "risks": ["Tokens de recuperación sin expiración verificada", "Sin confirmación vía correo"],
+    "plan": [
+      "Persistir tokens con hash y expirar tras uso",
+      "Enviar correo real con plantilla y throttling",
+      "Implementar pruebas de recuperación y reseteo exitoso/expirado",
+      "Actualizar documentación de endpoints y flujos"
+    ]
+  },
+  "RF-03": {
+    "status": "partial",
+    "missing": ["ui:filtros", "backend:validaciones", "db:fk-on-delete", "tests:e2e"],
+    "risks": ["Carga de archivos sin control de duplicados", "Estados de solicitud no gestionados"],
+    "plan": [
+      "Crear módulo SPA con listado, filtros y detalle de solicitudes",
+      "Aplicar esquema de estados y validaciones por rol",
+      "Agregar FKs con ON DELETE CASCADE y versionado optimista",
+      "Pruebas de crear/listar/buscar con fixtures"
+    ]
+  },
+  "RF-04": {
+    "status": "partial",
+    "missing": ["backend:antivirus", "db:hash", "tests:integracion", "docs:limites"],
+    "risks": ["No se valida checksum ni tipo en servidor", "Sin retención ni limpieza"],
+    "plan": [
+      "Validar MIME y tamaño en servidor con lista blanca",
+      "Guardar hash SHA-256 para deduplicar y auditar",
+      "Añadir pruebas de subida válida/invalid",
+      "Documentar límites por archivo y respuesta de error"
+    ]
+  },
+  "RF-05": {
+    "status": "missing",
+    "missing": ["ui:visor", "backend:api", "db:metadata", "tests", "docs"],
+    "risks": ["Sin control documental ni permisos"],
+    "plan": [
+      "Diseñar modelo de documentos versionados con ACL",
+      "Crear visor web con descargas seguras",
+      "Escribir pruebas de permisos y descarga",
+      "Publicar endpoints en OpenAPI"
+    ]
+  },
+  "RF-06": {
+    "status": "missing",
+    "missing": ["backend:validacion", "worker:cola", "db:logs", "tests", "docs"],
+    "risks": ["Validaciones manuales sin trazabilidad"],
+    "plan": [
+      "Implementar servicio de validación asíncrono con estados",
+      "Registrar resultado y errores por archivo",
+      "Agregar pruebas de transición de estados",
+      "Documentar proceso y eventos"
+    ]
+  },
+  "RF-07": {
+    "status": "partial",
+    "missing": ["ui:widgets-dinamicos", "backend:agregaciones", "tests", "docs"],
+    "risks": ["Panel sin métricas ni filtros", "Sin control de acceso por rol"],
+    "plan": [
+      "Construir dashboard con KPIs y gráficos por rol",
+      "Crear consultas agregadas y cache",
+      "Validar autorización en pruebas unitarias",
+      "Actualizar documentación funcional"
+    ]
+  },
+  "RF-08": {
+    "status": "missing",
+    "missing": ["ui:generacion", "backend:job", "db:historial", "tests", "docs"],
+    "risks": ["No hay informes descargables ni versionados"],
+    "plan": [
+      "Diseñar jobs para generar reportes PDF/CSV", 
+      "Persistir versiones y metadata de informe",
+      "Implementar pruebas de generación y descarga",
+      "Publicar endpoints y ejemplos"
+    ]
+  },
+  "RF-09": {
+    "status": "partial",
+    "missing": ["backend:eventos", "ui:centro-alertas", "tests", "docs"],
+    "risks": ["No existen disparadores automáticos ni envíos"],
+    "plan": [
+      "Crear servicio de notificaciones multi-canal", 
+      "Sincronizar con eventos de solicitudes e informes",
+      "Probar envío/lectura y marca de leídos",
+      "Documentar payloads y colas"
+    ]
+  },
+  "RF-10": {
+    "status": "missing",
+    "missing": ["ui:tickets", "backend:crud", "db:sla", "tests", "docs"],
+    "risks": ["Sin seguimiento postventa ni SLAs"],
+    "plan": [
+      "Modelar tickets con estados, prioridad y SLA",
+      "Construir UI para creación/comentarios",
+      "Agregar pruebas de ciclo completo",
+      "Actualizar OpenAPI y manual de uso"
+    ]
+  },
+  "RF-11": {
+    "status": "partial",
+    "missing": ["ui:recordatorios", "backend:conflictos", "tests", "docs"],
+    "risks": ["Agenda sin recordatorios ni control de solapes"],
+    "plan": [
+      "Agregar validación de conflictos y recordatorios automáticos",
+      "Sincronizar con notificaciones y calendario externo",
+      "Crear pruebas de creación/edición/cancelación",
+      "Documentar endpoints y formato iCal"
+    ]
+  },
+  "RF-12": {
+    "status": "missing",
+    "missing": ["ui:alertas", "backend:monitoreo", "db:indicadores", "tests", "docs"],
+    "risks": ["Sin trazabilidad de IA ni cumplimiento"],
+    "plan": [
+      "Definir fuentes y reglas de monitoreo IA",
+      "Crear servicio que clasifique hallazgos y alertas",
+      "Persistir métricas y auditoría",
+      "Documentar políticas y reportes"
+    ]
+  },
+  "RF-13": {
+    "status": "missing",
+    "missing": ["ui:filtros", "backend:auditoria", "db:historial", "tests", "docs"],
+    "risks": ["No existe registro de cambios ni export"],
+    "plan": [
+      "Implementar tabla audit_log con before/after",
+      "Exponer filtros por entidad y rango",
+      "Agregar export CSV/JSON y pruebas",
+      "Incluir secciones en documentación"
+    ]
+  }
+}

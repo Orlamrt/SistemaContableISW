@@ -1,0 +1,31 @@
+@startuml
+title Módulo: Autenticación
+
+rectangle "Front-End (UI)" {
+  [Pantalla Login]
+  [Pantalla Registro]
+  [Recuperar Contraseña]
+  [Reset Password]
+}
+
+rectangle "Back-End (Lógica)" {
+  [AuthController]
+  [PasswordResetService]
+  [JWTService]
+}
+
+database "Base de Datos" {
+  [users]
+  [password_resets]
+}
+
+[Pantalla Login] --> [AuthController] : POST /auth/login
+[Pantalla Registro] --> [AuthController] : POST /auth/register
+[Recuperar Contraseña] --> [PasswordResetService] : POST /auth/recover
+[Reset Password] --> [PasswordResetService] : POST /auth/reset-password
+
+[AuthController] --> [users]
+[PasswordResetService] --> [password_resets]
+[JWTService] --> [users]
+
+@enduml

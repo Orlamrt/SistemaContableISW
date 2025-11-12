@@ -1,0 +1,33 @@
+@startuml
+title Módulo: Informes
+
+rectangle "Front-End (UI)" {
+  [Solicitar Informe]
+  [Seguimiento Informe]
+  [Descargar Informe]
+}
+
+rectangle "Back-End (Lógica)" {
+  [ReportsController]
+  [ReportJobProducer]
+  [ReportWorker]
+  [StorageAdapter]
+}
+
+database "Base de Datos" {
+  [report_requests]
+  [report_versions]
+  [audit_requests]
+}
+
+[Solicitar Informe] --> [ReportsController] : POST /reports
+[Seguimiento Informe] --> [ReportsController] : GET /reports/{id}
+[Descargar Informe] --> [ReportsController] : GET /reports/{id}/download
+[ReportsController] --> [ReportJobProducer]
+[ReportJobProducer] --> [ReportWorker]
+[ReportWorker] --> [StorageAdapter]
+[ReportWorker] --> [report_versions]
+[ReportsController] --> [report_requests]
+[report_requests] --> [audit_requests]
+
+@enduml

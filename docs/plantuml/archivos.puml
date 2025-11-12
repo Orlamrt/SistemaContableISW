@@ -1,0 +1,29 @@
+@startuml
+title Módulo: Gestión de Archivos
+
+rectangle "Front-End (UI)" {
+  [Carga de Archivo]
+  [Estado de Validación]
+}
+
+rectangle "Back-End (Lógica)" {
+  [UploadService]
+  [FileValidator]
+  [StorageAdapter]
+}
+
+database "Base de Datos" {
+  [audit_requests]
+  [validation_logs]
+  [file_metadata]
+}
+
+[Carga de Archivo] --> [UploadService]
+[Estado de Validación] --> [FileValidator]
+[UploadService] --> [StorageAdapter]
+[UploadService] --> [file_metadata]
+[FileValidator] --> [validation_logs]
+[file_metadata] --> [audit_requests]
+[validation_logs] --> [audit_requests]
+
+@enduml

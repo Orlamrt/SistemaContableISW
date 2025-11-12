@@ -1,0 +1,31 @@
+@startuml
+title Módulo: Seguimiento y Panel
+
+rectangle "Front-End (UI)" {
+  [Dashboard]
+  [Widget KPIs]
+  [Centro de Notificaciones]
+}
+
+rectangle "Back-End (Lógica)" {
+  [DashboardService]
+  [NotificationService]
+  [MetricsAggregator]
+}
+
+database "Base de Datos" {
+  [audit_requests]
+  [notifications]
+  [compliance_logs]
+}
+
+[Dashboard] --> [DashboardService]
+[Widget KPIs] --> [MetricsAggregator]
+[Centro de Notificaciones] --> [NotificationService]
+[DashboardService] --> [audit_requests]
+[MetricsAggregator] --> [audit_requests]
+[MetricsAggregator] --> [compliance_logs]
+[NotificationService] --> [notifications]
+[notifications] --> [audit_requests]
+
+@enduml

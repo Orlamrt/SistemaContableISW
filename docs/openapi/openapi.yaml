@@ -1,0 +1,319 @@
+openapi: 3.0.3
+info:
+  title: Sistema de Auditoría Digital
+  version: 0.1.0
+  description: |
+    API actual del backend Express (estado inicial auditado). Requiere expansión para cubrir RF-01..RF-13.
+servers:
+  - url: http://localhost:4000/api
+paths:
+  /auth/register:
+    post:
+      summary: Registrar nuevo usuario
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, role]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                role:
+                  type: string
+                  enum: [Administrador, Auditor, Cliente]
+      responses:
+        '201':
+          description: Usuario creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+        '400':
+          description: Datos faltantes o rol inválido
+        '409':
+          description: Email duplicado
+  /auth/login:
+    post:
+      summary: Iniciar sesión
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Login exitoso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Credenciales inválidas
+  /auth/recover:
+    post:
+      summary: Solicitar recuperación de contraseña
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Solicitud procesada
+  /auth/reset-password:
+    post:
+      summary: Restablecer contraseña mediante token
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, password]
+              properties:
+                token:
+                  type: string
+                password:
+                  type: string
+                  format: password
+                  minLength: 6
+      responses:
+        '200':
+          description: Contraseña actualizada
+        '400':
+          description: Token inválido o expirado
+  /audits:
+    get:
+      summary: Listar solicitudes propias
+      tags: [Audits]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de solicitudes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuditRequest'
+        '401':
+          description: Token faltante o inválido
+    post:
+      summary: Registrar nueva solicitud de auditoría
+      tags: [Audits]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [audit_type, file]
+              properties:
+                audit_type:
+                  type: string
+                  enum: [interna, externa, ti]
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Solicitud creada
+        '400':
+          description: Validación fallida
+        '401':
+          description: Token inválido
+  /notifications:
+    get:
+      summary: Listar notificaciones del usuario
+      tags: [Notifications]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Notificaciones encontradas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
+  /meetings:
+    get:
+      summary: Listar reuniones agendadas
+      tags: [Agenda]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Reuniones del usuario
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Meeting'
+    post:
+      summary: Crear una reunión
+      tags: [Agenda]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [scheduled_at]
+              properties:
+                scheduled_at:
+                  type: string
+                  format: date-time
+                notes:
+                  type: string
+                  nullable: true
+      responses:
+        '201':
+          description: Reunión creada
+        '400':
+          description: Validación fallida
+  /compliance/summary:
+    get:
+      summary: Resumen de cumplimiento normativo
+      tags: [Compliance]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Últimas verificaciones
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComplianceSummary'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    RegisterResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        userId:
+          type: integer
+          format: int32
+    LoginResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        token:
+          type: string
+        user:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+            email:
+              type: string
+              format: email
+            role:
+              type: string
+    AuditRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        audit_type:
+          type: string
+        status:
+          type: string
+        file_path:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        message:
+          type: string
+        type:
+          type: string
+        is_read:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+    Meeting:
+      type: object
+      properties:
+        id:
+          type: integer
+        scheduled_at:
+          type: string
+          format: date-time
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+    ComplianceSummary:
+      type: object
+      properties:
+        last_check:
+          type: string
+          nullable: true
+        last_status:
+          type: string
+          nullable: true
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              description:
+                type: string
+              status:
+                type: string
+              checked_at:
+                type: string
+                format: date-time
