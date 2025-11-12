@@ -13,62 +13,68 @@
       "/coordinacion.html",
       "/cumplimiento.html"
     ],
-    "components": [
+    "scripts": [
       "js/auth.js",
       "js/app.js"
     ],
-    "state": [
-      "localStorage.token",
-      "localStorage.user"
-    ]
+    "state": ["localStorage.token", "localStorage.user"],
+    "rbac": {
+      "route_guards": true,
+      "menu_filter": true
+    }
   },
   "backend": {
     "entry": "Backend/server.js",
-    "endpoints": [
+    "app": "Backend/src/app.js",
+    "routes": [
       "POST /api/auth/register",
       "POST /api/auth/login",
+      "GET /api/auth/me",
       "POST /api/auth/recover",
       "POST /api/auth/reset-password",
-      "POST /api/audits",
       "GET /api/audits",
+      "POST /api/audits",
+      "GET /api/audits/:id",
+      "PATCH /api/audits/:id/status",
       "GET /api/notifications",
-      "POST /api/meetings",
+      "PATCH /api/notifications/:id/read",
       "GET /api/meetings",
-      "GET /api/compliance/summary"
+      "POST /api/meetings",
+      "GET /api/compliance/summary",
+      "GET /api/dashboard/summary"
     ],
-    "middleware": [
-      "authMiddleware"
-    ],
-    "jobs": [],
-    "dependencies": ["express", "mysql2", "bcryptjs", "jsonwebtoken", "multer", "nodemailer"]
+    "middleware": ["requireAuth", "requireRole", "optionalAuth"],
+    "services": ["db", "rbac", "idempotency", "audit-log", "authorization"],
+    "dependencies": ["express", "mysql2", "bcryptjs", "jsonwebtoken", "multer", "nodemailer", "cors", "dotenv"]
   },
   "db": {
     "engine": "mysql",
-    "schemas": ["auditoria_digital"],
+    "migrations": ["backend/migrations/001_rbac_and_concurrency.sql"],
     "tables": [
       "users",
+      "roles",
+      "permissions",
+      "user_roles",
+      "role_permissions",
       "audit_requests",
       "notifications",
       "meetings",
       "compliance_logs",
-      "password_resets"
-    ],
-    "migrations": []
+      "password_resets",
+      "idempotency_keys",
+      "audit_log"
+    ]
   },
   "tests": {
-    "unit": 0,
-    "integration": 0,
-    "e2e": 0,
-    "coverage": "0%"
+    "framework": "node:test",
+    "files": [
+      "Backend/tests/authorization.test.js",
+      "Backend/tests/idempotency.test.js"
+    ]
   },
   "ci": [],
-  "docs": [],
-  "orphans": [
-    "Styles/stylesSA.css",
-    "auditorias.html",
-    "coordinacion.html",
-    "cumplimiento.html",
-    "dashboard.html",
-    "notificaciones.html"
+  "docs": [
+    "docs/openapi/openapi.yaml",
+    "docs/plantuml/*.puml"
   ]
 }

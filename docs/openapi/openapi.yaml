@@ -1,237 +1,46 @@
 openapi: 3.0.3
 info:
   title: Sistema de Auditoría Digital
-  version: 0.1.0
+  version: 1.1.0
   description: |
-    API actual del backend Express (estado inicial auditado). Requiere expansión para cubrir RF-01..RF-13.
+    API Express con RBAC para el sistema de auditoría digital. Todas las rutas `/api/*`
+    responden en JSON y emplean JWT bearer tokens. Las operaciones protegidas incluyen
+    metadatos `x-roles` para indicar los roles válidos.
 servers:
   - url: http://localhost:4000/api
-paths:
-  /auth/register:
-    post:
-      summary: Registrar nuevo usuario
-      tags: [Auth]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [email, password, role]
-              properties:
-                email:
-                  type: string
-                  format: email
-                password:
-                  type: string
-                  format: password
-                role:
-                  type: string
-                  enum: [Administrador, Auditor, Cliente]
-      responses:
-        '201':
-          description: Usuario creado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RegisterResponse'
-        '400':
-          description: Datos faltantes o rol inválido
-        '409':
-          description: Email duplicado
-  /auth/login:
-    post:
-      summary: Iniciar sesión
-      tags: [Auth]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [email, password]
-              properties:
-                email:
-                  type: string
-                  format: email
-                password:
-                  type: string
-                  format: password
-      responses:
-        '200':
-          description: Login exitoso
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LoginResponse'
-        '401':
-          description: Credenciales inválidas
-  /auth/recover:
-    post:
-      summary: Solicitar recuperación de contraseña
-      tags: [Auth]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [email]
-              properties:
-                email:
-                  type: string
-                  format: email
-      responses:
-        '200':
-          description: Solicitud procesada
-  /auth/reset-password:
-    post:
-      summary: Restablecer contraseña mediante token
-      tags: [Auth]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [token, password]
-              properties:
-                token:
-                  type: string
-                password:
-                  type: string
-                  format: password
-                  minLength: 6
-      responses:
-        '200':
-          description: Contraseña actualizada
-        '400':
-          description: Token inválido o expirado
-  /audits:
-    get:
-      summary: Listar solicitudes propias
-      tags: [Audits]
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: Lista de solicitudes
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AuditRequest'
-        '401':
-          description: Token faltante o inválido
-    post:
-      summary: Registrar nueva solicitud de auditoría
-      tags: [Audits]
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              required: [audit_type, file]
-              properties:
-                audit_type:
-                  type: string
-                  enum: [interna, externa, ti]
-                file:
-                  type: string
-                  format: binary
-      responses:
-        '201':
-          description: Solicitud creada
-        '400':
-          description: Validación fallida
-        '401':
-          description: Token inválido
-  /notifications:
-    get:
-      summary: Listar notificaciones del usuario
-      tags: [Notifications]
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: Notificaciones encontradas
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Notification'
-  /meetings:
-    get:
-      summary: Listar reuniones agendadas
-      tags: [Agenda]
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: Reuniones del usuario
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Meeting'
-    post:
-      summary: Crear una reunión
-      tags: [Agenda]
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [scheduled_at]
-              properties:
-                scheduled_at:
-                  type: string
-                  format: date-time
-                notes:
-                  type: string
-                  nullable: true
-      responses:
-        '201':
-          description: Reunión creada
-        '400':
-          description: Validación fallida
-  /compliance/summary:
-    get:
-      summary: Resumen de cumplimiento normativo
-      tags: [Compliance]
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: Últimas verificaciones
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ComplianceSummary'
+    description: Servidor local de desarrollo
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
+  parameters:
+    AuditId:
+      name: auditId
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: Identificador numérico de la solicitud de auditoría
+    NotificationId:
+      name: notificationId
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: Identificador de la notificación
   schemas:
-    RegisterResponse:
+    LoginRequest:
       type: object
+      required: [email, password]
       properties:
-        message:
+        email:
           type: string
-        userId:
-          type: integer
-          format: int32
+          format: email
+        password:
+          type: string
+          format: password
     LoginResponse:
       type: object
       properties:
@@ -244,26 +53,56 @@ components:
           properties:
             id:
               type: integer
-              format: int32
             email:
               type: string
               format: email
-            role:
-              type: string
-    AuditRequest:
+            roles:
+              type: array
+              items:
+                type: string
+            permissions:
+              type: array
+              items:
+                type: string
+    RegisterRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+          minLength: 6
+    RegisterResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    Audit:
       type: object
       properties:
         id:
           type: integer
+        user_id:
+          type: integer
         audit_type:
           type: string
+          enum: [interna, externa, ti]
         status:
           type: string
+          enum: [enviada, en_revision, en_proceso, completada, rechazada]
         file_path:
           type: string
         created_at:
           type: string
           format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        version:
+          type: integer
     Notification:
       type: object
       properties:
@@ -275,9 +114,13 @@ components:
           type: string
         type:
           type: string
+          enum: [info, warning, success]
         is_read:
-          type: integer
+          type: boolean
         created_at:
+          type: string
+          format: date-time
+        updated_at:
           type: string
           format: date-time
     Meeting:
@@ -294,11 +137,15 @@ components:
         created_at:
           type: string
           format: date-time
+        updated_at:
+          type: string
+          format: date-time
     ComplianceSummary:
       type: object
       properties:
         last_check:
           type: string
+          format: date-time
           nullable: true
         last_status:
           type: string
@@ -308,12 +155,339 @@ components:
           items:
             type: object
             properties:
-              id:
-                type: integer
-              description:
-                type: string
-              status:
-                type: string
+              id: { type: integer }
+              description: { type: string }
+              status: { type: string }
               checked_at:
                 type: string
                 format: date-time
+        message:
+          type: string
+          nullable: true
+    DashboardSummary:
+      type: object
+      properties:
+        audits:
+          type: array
+          items:
+            type: object
+            properties:
+              status: { type: string }
+              total: { type: integer }
+        notifications:
+          type: object
+          properties:
+            unread:
+              type: integer
+        meetings:
+          type: object
+          properties:
+            upcoming:
+              type: integer
+        compliance:
+          type: object
+          nullable: true
+          properties:
+            status:
+              type: string
+            checked_at:
+              type: string
+              format: date-time
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+paths:
+  /auth/register:
+    post:
+      summary: Registrar nuevo usuario (rol CLIENTE)
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Usuario creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+        '400': { description: Datos inválidos }
+        '409': { description: Email duplicado }
+  /auth/login:
+    post:
+      summary: Iniciar sesión
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login exitoso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401': { description: Credenciales inválidas }
+  /auth/me:
+    get:
+      summary: Obtener perfil autenticado
+      tags: [Auth]
+      security:
+        - bearerAuth: []
+      x-roles: [ADMIN, AUDITOR, CLIENTE, SOPORTE]
+      responses:
+        '200':
+          description: Información del usuario autenticado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: integer }
+                  email: { type: string }
+                  roles:
+                    type: array
+                    items: { type: string }
+                  permissions:
+                    type: array
+                    items: { type: string }
+                  status: { type: string }
+        '401': { description: Token inválido o expirado }
+  /auth/recover:
+    post:
+      summary: Solicitar recuperación de contraseña
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200': { description: Respuesta neutral }
+  /auth/reset-password:
+    post:
+      summary: Restablecer contraseña con token
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, password]
+              properties:
+                token: { type: string }
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200': { description: Contraseña actualizada }
+        '400': { description: Token inválido o expirado }
+  /audits:
+    get:
+      summary: Listar solicitudes de auditoría
+      tags: [Audits]
+      security:
+        - bearerAuth: []
+      x-roles: [ADMIN, AUDITOR, CLIENTE, SOPORTE]
+      parameters:
+        - in: query
+          name: status
+          required: false
+          schema:
+            type: string
+            enum: [enviada, en_revision, en_proceso, completada, rechazada]
+      responses:
+        '200':
+          description: Colección de solicitudes visibles para el usuario
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Audit'
+        '401': { description: Token inválido }
+        '403': { description: Acceso denegado }
+    post:
+      summary: Registrar nueva solicitud de auditoría
+      description: Requiere encabezado `Idempotency-Key` para idempotencia.
+      tags: [Audits]
+      security:
+        - bearerAuth: []
+      x-roles: [ADMIN, AUDITOR, CLIENTE]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [audit_type, file]
+              properties:
+                audit_type:
+                  type: string
+                  enum: [interna, externa, ti]
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '201': { description: Solicitud creada }
+        '422': { description: Validación fallida }
+        '401': { description: Token inválido }
+  /audits/{auditId}:
+    get:
+      summary: Obtener detalle de una solicitud
+      tags: [Audits]
+      security:
+        - bearerAuth: []
+      x-roles: [ADMIN, AUDITOR, CLIENTE, SOPORTE]
+      parameters:
+        - $ref: '#/components/parameters/AuditId'
+      responses:
+        '200':
+          description: Detalle de la solicitud
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Audit'
+        '404': { description: Solicitud no encontrada }
+        '403': { description: Acceso restringido }
+  /audits/{auditId}/status:
+    patch:
+      summary: Actualizar estado de una solicitud
+      tags: [Audits]
+      security:
+        - bearerAuth: []
+      x-roles: [ADMIN, AUDITOR]
+      parameters:
+        - $ref: '#/components/parameters/AuditId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status, version]
+              properties:
+                status:
+                  type: string
+                  enum: [enviada, en_revision, en_proceso, completada, rechazada]
+                version:
+                  type: integer
+      responses:
+        '200': { description: Estado actualizado }
+        '404': { description: Solicitud no encontrada }
+        '409': { description: Conflicto de versión }
+  /notifications:
+    get:
+      summary: Listar notificaciones del usuario
+      tags: [Notifications]
+      security:
+        - bearerAuth: []
+      x-roles: [ADMIN, AUDITOR, CLIENTE, SOPORTE]
+      responses:
+        '200':
+          description: Notificaciones
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
+  /notifications/{notificationId}/read:
+    patch:
+      summary: Marcar notificación como leída
+      tags: [Notifications]
+      security:
+        - bearerAuth: []
+      x-roles: [ADMIN, AUDITOR, CLIENTE, SOPORTE]
+      parameters:
+        - $ref: '#/components/parameters/NotificationId'
+      responses:
+        '200': { description: Notificación actualizada }
+        '404': { description: Notificación no encontrada }
+  /meetings:
+    get:
+      summary: Listar reuniones del usuario
+      tags: [Agenda]
+      security:
+        - bearerAuth: []
+      x-roles: [ADMIN, AUDITOR, CLIENTE, SOPORTE]
+      responses:
+        '200':
+          description: Reuniones del usuario
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Meeting'
+    post:
+      summary: Agendar reunión
+      tags: [Agenda]
+      security:
+        - bearerAuth: []
+      x-roles: [ADMIN, AUDITOR, CLIENTE, SOPORTE]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [scheduled_at]
+              properties:
+                scheduled_at:
+                  type: string
+                  format: date-time
+                notes:
+                  type: string
+                  nullable: true
+      responses:
+        '201': { description: Reunión creada }
+        '409': { description: Conflicto de horario }
+  /compliance/summary:
+    get:
+      summary: Resumen de cumplimiento normativo
+      tags: [Compliance]
+      security:
+        - bearerAuth: []
+      x-roles: [ADMIN, AUDITOR, CLIENTE]
+      responses:
+        '200':
+          description: Resumen de cumplimiento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComplianceSummary'
+        '403': { description: Acceso denegado }
+  /dashboard/summary:
+    get:
+      summary: Métricas del dashboard
+      tags: [Dashboard]
+      security:
+        - bearerAuth: []
+      x-roles: [ADMIN, AUDITOR, CLIENTE, SOPORTE]
+      responses:
+        '200':
+          description: Resumen de KPIs para el usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardSummary'
+security:
+  - bearerAuth: []

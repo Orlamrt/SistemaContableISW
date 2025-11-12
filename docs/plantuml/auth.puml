@@ -14,8 +14,16 @@ rectangle "Back-End (Lógica)" {
   [JWTService]
 }
 
+note right of [AuthController]
+  Roles involucrados:
+  * PUBLIC: acceso a login/registro
+  * ADMIN/AUDITOR/CLIENTE/SOPORTE: `/auth/me`
+end note
+
 database "Base de Datos" {
   [users]
+  [user_roles]
+  [roles]
   [password_resets]
 }
 
@@ -25,6 +33,7 @@ database "Base de Datos" {
 [Reset Password] --> [PasswordResetService] : POST /auth/reset-password
 
 [AuthController] --> [users]
+[AuthController] --> [user_roles]
 [PasswordResetService] --> [password_resets]
 [JWTService] --> [users]
 

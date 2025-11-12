@@ -2,28 +2,30 @@
 title Módulo: Gestión de Archivos
 
 rectangle "Front-End (UI)" {
-  [Carga de Archivo]
-  [Estado de Validación]
+  [Carga de Archivos]
+  [Validación Visual]
 }
 
 rectangle "Back-End (Lógica)" {
-  [UploadService]
-  [FileValidator]
-  [StorageAdapter]
+  [ArchivoController]
+  [StorageService]
+  [ValidationService]
 }
+
+note right of [ArchivoController]
+  Roles habilitados:
+  * CLIENTE/AUDITOR: subir y validar
+  * ADMIN: supervisión
+end note
 
 database "Base de Datos" {
   [audit_requests]
-  [validation_logs]
-  [file_metadata]
+  [audit_log]
 }
 
-[Carga de Archivo] --> [UploadService]
-[Estado de Validación] --> [FileValidator]
-[UploadService] --> [StorageAdapter]
-[UploadService] --> [file_metadata]
-[FileValidator] --> [validation_logs]
-[file_metadata] --> [audit_requests]
-[validation_logs] --> [audit_requests]
+[Carga de Archivos] --> [ArchivoController] : POST /audits
+[ArchivoController] --> [StorageService]
+[ArchivoController] --> [audit_requests]
+[ValidationService] --> [audit_log]
 
 @enduml

@@ -1,31 +1,32 @@
 @startuml
-title Módulo: Cumplimiento e IA
+title Módulo: Normativa y Cumplimiento
 
-rectangle "Front-End (UI)" {
+rectangle "Front-End" {
   [Panel Cumplimiento]
   [Alertas IA]
-  [Historial de Evaluaciones]
 }
 
-rectangle "Back-End (Lógica)" {
+rectangle "Back-End" {
   [ComplianceController]
-  [AI_MonitorService]
-  [AlertingService]
+  [RulesEngine]
+  [AlertService]
 }
+
+note right of [ComplianceController]
+  Roles:
+  * ADMIN/AUDITOR: acceso completo
+  * CLIENTE: vista resumida
+end note
 
 database "Base de Datos" {
   [compliance_logs]
-  [ai_alerts]
-  [audit_log]
+  [alerts]
 }
 
 [Panel Cumplimiento] --> [ComplianceController] : GET /compliance/summary
-[Alertas IA] --> [AI_MonitorService]
-[Historial de Evaluaciones] --> [ComplianceController]
-[ComplianceController] --> [compliance_logs]
-[AI_MonitorService] --> [ai_alerts]
-[AlertingService] --> [ai_alerts]
-[AlertingService] --> [audit_log]
-[ai_alerts] --> [audit_log]
+[Alertas IA] --> [ComplianceController]
+[ComplianceController] --> [RulesEngine]
+[RulesEngine] --> [compliance_logs]
+[AlertService] --> [alerts]
 
 @enduml
